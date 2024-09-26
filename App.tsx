@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AppBar from './components/AppBar/AppBar';
-import Register from './components/Register/Register';
+import Register from './components/Auth/Auth';
 
 export default function App() {
   return (

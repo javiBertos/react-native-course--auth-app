@@ -1,12 +1,12 @@
 import { StyleSheet } from "react-native";
 
-export const RegisterStyles = StyleSheet.create({
-    signUpContainer: {
+export const AuthStyles = StyleSheet.create({
+    authContainer: {
         width: 200,
         height: 'auto',
         alignItems: 'center',
     },
-    signUpTitle: {
+    authTitle: {
         fontSize: 30,
         color: '#fff',
     },
