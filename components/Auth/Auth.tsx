@@ -1,7 +1,7 @@
 import { GestureResponderEvent, Pressable, Text, TextInput, View } from "react-native";
 import { AuthProps } from "./types";
 import { AuthStyles as styles } from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User, users } from "../../store/users";
 
 export default function Auth({ setAuthTitle }: AuthProps) {
@@ -12,6 +12,10 @@ export default function Auth({ setAuthTitle }: AuthProps) {
     });
 
     const [isRegister, setIsRegister] = useState<boolean>(true);
+
+    useEffect(() => {
+        setAuthTitle(isRegister ? "Registe" : "Login");
+    });
 
     const handleTextInput = (text: string, type: string) => {
         setAuthData({
@@ -30,7 +34,6 @@ export default function Auth({ setAuthTitle }: AuthProps) {
         });
 
         setIsRegister(false);
-        setAuthTitle("Login");
     };
 
     const handleLoginPress = (e: GestureResponderEvent) => {
