@@ -6,10 +6,6 @@ export const AuthStyles = StyleSheet.create({
         height: 'auto',
         alignItems: 'center',
     },
-    authTitle: {
-        fontSize: 30,
-        color: '#fff',
-    },
     input: {
         height: 40,
         margin: 12,

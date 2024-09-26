@@ -1,3 +1,3 @@
 export type AuthProps = {
-    title: string;
+    setAuthTitle: React.Dispatch<React.SetStateAction<string>>
 };

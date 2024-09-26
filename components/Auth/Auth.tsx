@@ -4,7 +4,7 @@ import { AuthStyles as styles } from "./styles";
 import { useState } from "react";
 import { User, users } from "../../store/users";
 
-export default function Auth() {
+export default function Auth({ setAuthTitle }: AuthProps) {
     const [authData, setAuthData] = useState<User>({
         name: '',
         email: '',
@@ -28,6 +28,9 @@ export default function Auth() {
             email: '',
             password: '',
         });
+
+        setIsRegister(false);
+        setAuthTitle("Login");
     };
 
     const handleLoginPress = (e: GestureResponderEvent) => {

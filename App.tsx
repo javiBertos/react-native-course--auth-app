@@ -10,7 +10,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <AppBar title="Mangurian home!" />
       <Text style={styles.authTitle }>{ authTitle }</Text>
-      <Register />
+      <Register setAuthTitle={setAuthTitle} />
     </SafeAreaView>
   );
 }
