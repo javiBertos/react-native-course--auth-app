@@ -36,7 +36,6 @@ export default function Auth() {
 
     return (
         <View style={styles.authContainer}>
-            <Text style={styles.authTitle }>{ isRegister ? 'Register' : 'Login' }</Text>
             {isRegister && (
                 <TextInput
                     style={styles.input}
