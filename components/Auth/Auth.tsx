@@ -37,7 +37,15 @@ export default function Auth({ setAuthTitle }: AuthProps) {
     };
 
     const handleLoginPress = (e: GestureResponderEvent) => {
-        console.log('I\'m trying to log now...');
+        const user = users.find((u) => u.email == authData.email && u.password == authData.password);
+
+        if (user) {
+            console.log(`User logged! [${JSON.stringify(user)}]`);
+            setIsRegister(true);
+            return;
+        }
+
+        console.log('Wrong login...');
     };
 
     return (
@@ -67,7 +75,7 @@ export default function Auth({ setAuthTitle }: AuthProps) {
                 placeholderTextColor={'#fff'}
                 secureTextEntry
             />
-            <Pressable style={styles.button} onPress={(e) => isRegister ? handleResgisterPress(e) : handleResgisterPress(e)}>
+            <Pressable style={styles.button} onPress={(e) => isRegister ? handleResgisterPress(e) : handleLoginPress(e)}>
                 <Text style={styles.buttonText}>{ isRegister ? 'Register me!' : 'Log me in!' }</Text>
             </Pressable>
         </View>
