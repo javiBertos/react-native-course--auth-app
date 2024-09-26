@@ -2,22 +2,30 @@ import { GestureResponderEvent, Pressable, Text, TextInput, View } from "react-n
 import { RegisterProps } from "./types";
 import { RegisterStyles as styles } from "./styles";
 import { useState } from "react";
+import { User, users } from "../../store/users";
 
 export default function Register() {
-    const [registerData, setRegisterData] = useState({});
+    const [registerData, setRegisterData] = useState<User>({
+        name: '',
+        email: '',
+        password: '',
+    });
 
     const handleTextInput = (text: string, type: string) => {
-        console.log([text, type])
         setRegisterData({
             ...registerData,
             [type]: text,
         });
     };
 
-    const onRegisterPress = (e: GestureResponderEvent) => {
-        console.log(e.type);
-
-        console.log(registerData);
+    const handleResgisterPress = (e: GestureResponderEvent) => {
+        users.push(registerData);
+        
+        setRegisterData({
+            name: '',
+            email: '',
+            password: '',
+        });
     };
 
     return (
@@ -26,12 +34,14 @@ export default function Register() {
             <TextInput
                 style={styles.input}
                 onChangeText={(t) => handleTextInput(t, 'name')}
+                value={registerData.name}
                 placeholder="Tu nombre..."
                 placeholderTextColor={'#fff'}
             />
             <TextInput
                 style={styles.input}
                 onChangeText={(t) => handleTextInput(t, 'email')}
+                value={registerData.email}
                 placeholder="Tu email..."
                 placeholderTextColor={'#fff'}
                 keyboardType="email-address"
@@ -39,11 +49,12 @@ export default function Register() {
             <TextInput
                 style={styles.input}
                 onChangeText={(t) => handleTextInput(t, 'password')}
+                value={registerData.password}
                 placeholder="Tu password..."
                 placeholderTextColor={'#fff'}
                 secureTextEntry
             />
-            <Pressable style={styles.button} onPress={onRegisterPress}>
+            <Pressable style={styles.button} onPress={handleResgisterPress}>
                 <Text style={styles.buttonText}>Register me!</Text>
             </Pressable>
         </View>
