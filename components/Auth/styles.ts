@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const AuthStyles = StyleSheet.create({
     authContainer: {
-        width: 200,
+        width: 300,
         height: 'auto',
         alignItems: 'center',
     },
@@ -27,5 +27,24 @@ export const AuthStyles = StyleSheet.create({
     buttonText: {
         fontSize: 20,
         color: '#fff',
-    }
+        textAlign: 'center',
+    },
+    logOutButton: {
+        backgroundColor: '#912a2a',
+        borderRadius: 50,
+        margin: 12,
+        padding: 20,
+    },
+    loggedData: {
+        fontSize: 20,
+        margin: 5,
+    },
+    loggedDataValues: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    loggedDataLink: {
+        color: '#0f60a3',
+        fontWeight: 'bold',
+    },
 });

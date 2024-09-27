@@ -1,4 +1,4 @@
-import { GestureResponderEvent, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, GestureResponderEvent, Linking, Pressable, Text, TextInput, View } from "react-native";
 import { AuthProps } from "./types";
 import { AuthStyles as styles } from "./styles";
 import { useEffect, useState } from "react";
@@ -11,10 +11,10 @@ export default function Auth({ setAuthTitle }: AuthProps) {
         password: '',
     });
 
-    const [isRegister, setIsRegister] = useState<boolean>(true);
+    const [authStatus, setAuthStatus] = useState<"register"|"login"|"logged">("register");
 
     useEffect(() => {
-        setAuthTitle(isRegister ? "Registe" : "Login");
+        setAuthTitle(authStatus == "register" ? "Register" : (authStatus == "logged" ? "Logged" : "Login"));
     });
 
     const handleTextInput = (text: string, type: string) => {
@@ -33,24 +33,41 @@ export default function Auth({ setAuthTitle }: AuthProps) {
             password: '',
         });
 
-        setIsRegister(false);
+        setAuthStatus("login");
     };
 
     const handleLoginPress = (e: GestureResponderEvent) => {
         const user = users.find((u) => u.email == authData.email && u.password == authData.password);
 
         if (user) {
-            console.log(`User logged! [${JSON.stringify(user)}]`);
-            setIsRegister(true);
-            return;
+            setAuthData(user);
+            setAuthStatus("logged");
+        } else {
+            console.log('Wrong login...');
         }
+    };
 
-        console.log('Wrong login...');
+    const handleLogoutPress = (e: GestureResponderEvent) => {
+        Alert.alert('Shall I close your session, dude? (like if you had any... XD)', 'Logging out...', [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'Sure!', onPress: () => {
+                setAuthData({
+                    name: '',
+                    email: '',
+                    password: '',
+                });
+                setAuthStatus("register");
+            }},
+          ]);
     };
 
     return (
         <View style={styles.authContainer}>
-            {isRegister && (
+            {authStatus == "register" && (
                 <TextInput
                     style={styles.input}
                     onChangeText={(t) => handleTextInput(t, 'name')}
@@ -59,25 +76,43 @@ export default function Auth({ setAuthTitle }: AuthProps) {
                     placeholderTextColor={'#fff'}
                 />
             )}
-            <TextInput
-                style={styles.input}
-                onChangeText={(t) => handleTextInput(t, 'email')}
-                value={authData.email}
-                placeholder="Tu email..."
-                placeholderTextColor={'#fff'}
-                keyboardType="email-address"
-            />
-            <TextInput
-                style={styles.input}
-                onChangeText={(t) => handleTextInput(t, 'password')}
-                value={authData.password}
-                placeholder="Tu password..."
-                placeholderTextColor={'#fff'}
-                secureTextEntry
-            />
-            <Pressable style={styles.button} onPress={(e) => isRegister ? handleResgisterPress(e) : handleLoginPress(e)}>
-                <Text style={styles.buttonText}>{ isRegister ? 'Register me!' : 'Log me in!' }</Text>
-            </Pressable>
+            {authStatus != "logged" && (
+                <>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={(t) => handleTextInput(t, 'email')}
+                        value={authData.email}
+                        placeholder="Tu email..."
+                        placeholderTextColor={'#fff'}
+                        keyboardType="email-address"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={(t) => handleTextInput(t, 'password')}
+                        value={authData.password}
+                        placeholder="Tu password..."
+                        placeholderTextColor={'#fff'}
+                        secureTextEntry
+                    />
+                    <Pressable style={styles.button} onPress={(e) => authStatus == "register" ? handleResgisterPress(e) : handleLoginPress(e)}>
+                        <Text style={styles.buttonText}>{ authStatus == "register" ? 'Register me!' : 'Log me in!' }</Text>
+                    </Pressable>
+                </>
+            )}
+            {authStatus == "logged" && (
+                <View>
+                    <Text style={styles.loggedData}>Hello, <Text style={styles.loggedDataValues}>{authData.name}</Text>!</Text>
+                    <Text style={styles.loggedData}>
+                        Your email is, <Text style={styles.loggedDataLink} onPress={() => Linking.openURL(`mailto:${authData.email}`)}>{authData.email}</Text>
+                    </Text>
+                    <Text style={styles.loggedData}>And your password is...</Text>
+                    <Text style={styles.loggedDataValues}>{authData.password.replace(/./gi, '*')} Obviously hidden!!!</Text>
+
+                    <Pressable style={styles.logOutButton} onPress={handleLogoutPress}>
+                        <Text style={styles.buttonText}>Log out!</Text>
+                    </Pressable>
+                </View>
+            )}
         </View>
     );
 }
