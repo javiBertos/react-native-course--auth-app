@@ -1,7 +1,7 @@
 import { Alert, GestureResponderEvent, Linking, Pressable, Text, TextInput, View } from "react-native";
 import { AuthProps, InputForm } from "./types";
 import { AuthStyles as styles } from "./styles";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User, users } from "../../store/users";
 
 export default function Auth({ setAuthTitle }: AuthProps) {
@@ -13,6 +13,7 @@ export default function Auth({ setAuthTitle }: AuthProps) {
 
     const [authStatus, setAuthStatus] = useState<"register"|"login"|"logged">("register");
 
+    const emailRef = useRef<TextInput | null>(null);
     const formDefinitions: InputForm[] = [
         {
             propertyName: "name",
@@ -23,7 +24,8 @@ export default function Auth({ setAuthTitle }: AuthProps) {
             propertyName: "email",
             placeholder: "Your email...",
             keyboardType: "email-address",
-            secureTextEntry: false
+            secureTextEntry: false,
+            ref: emailRef
         },
         {
             propertyName: "password",
@@ -48,15 +50,23 @@ export default function Auth({ setAuthTitle }: AuthProps) {
     }
 
     const handleResgisterPress = (e: GestureResponderEvent) => {
-        users.push(authData);
+        const user = getUserByEmail(authData.email);
 
-        setAuthData({
-            name: '',
-            email: '',
-            password: '',
-        });
+        if (!user) {
+            users.push(authData);
 
-        setAuthStatus("login");
+            setAuthData({
+                name: '',
+                email: '',
+                password: '',
+            });
+
+            setAuthStatus("login");
+            emailRef.current?.focus();
+        } else {
+            Alert.alert('Existing account...', 'That email already exists in the system, so you already have an account...\nSorry dude!');
+            emailRef.current?.focus();
+        }
     };
 
     const handleLoginPress = (e: GestureResponderEvent) => {
@@ -91,6 +101,8 @@ export default function Auth({ setAuthTitle }: AuthProps) {
         ]);
     };
 
+    let myInput: TextInput;
+
     return (
         <View style={styles.authContainer}>
             {
@@ -106,6 +118,8 @@ export default function Auth({ setAuthTitle }: AuthProps) {
                                 placeholderTextColor={'#fff'}
                                 keyboardType={formElement.keyboardType}
                                 secureTextEntry={formElement.secureTextEntry}
+                                ref={formElement.ref}
+                                selectTextOnFocus
                             />
                         );
                     }

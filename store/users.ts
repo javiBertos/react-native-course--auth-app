@@ -4,4 +4,6 @@ export type User = {
     password: string,
 }
 
-export const users: User[] = [];
+export const users: User[] = [
+    { name: "Javier Bertos", email: "javier.bertos@gmail.com", password: "Demo1234!" },
+];
