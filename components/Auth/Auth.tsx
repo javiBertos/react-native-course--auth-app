@@ -1,5 +1,5 @@
 import { Alert, GestureResponderEvent, Linking, Pressable, Text, TextInput, View } from "react-native";
-import { AuthProps } from "./types";
+import { AuthProps, InputForm } from "./types";
 import { AuthStyles as styles } from "./styles";
 import { useEffect, useState } from "react";
 import { User, users } from "../../store/users";
@@ -12,6 +12,25 @@ export default function Auth({ setAuthTitle }: AuthProps) {
     });
 
     const [authStatus, setAuthStatus] = useState<"register"|"login"|"logged">("register");
+
+    const formDefinitions: InputForm[] = [
+        {
+            propertyName: "name",
+            placeholder: "Your name...",
+            secureTextEntry: false
+        },
+        {
+            propertyName: "email",
+            placeholder: "Your email...",
+            keyboardType: "email-address",
+            secureTextEntry: false
+        },
+        {
+            propertyName: "password",
+            placeholder: "Your password...",
+            secureTextEntry: true
+        },
+    ];
 
     useEffect(() => {
         setAuthTitle(authStatus == "register" ? "Register" : (authStatus == "logged" ? "Logged" : "Login"));
@@ -67,37 +86,28 @@ export default function Auth({ setAuthTitle }: AuthProps) {
 
     return (
         <View style={styles.authContainer}>
-            {authStatus == "register" && (
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(t) => handleTextInput(t, 'name')}
-                    value={authData.name}
-                    placeholder="Tu nombre..."
-                    placeholderTextColor={'#fff'}
-                />
-            )}
+            {
+                formDefinitions.map(formElement => {
+                    if (authStatus == "register" && formElement.propertyName == "name" || authStatus != "logged" && formElement.propertyName != "name") {
+                        return (
+                            <TextInput
+                                key={formElement.propertyName}
+                                style={styles.input}
+                                onChangeText={(t) => handleTextInput(t, formElement.propertyName)}
+                                value={authData[formElement.propertyName]}
+                                placeholder={formElement.placeholder}
+                                placeholderTextColor={'#fff'}
+                                keyboardType={formElement.keyboardType}
+                                secureTextEntry={formElement.secureTextEntry}
+                            />
+                        );
+                    }
+                })
+            }
             {authStatus != "logged" && (
-                <>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(t) => handleTextInput(t, 'email')}
-                        value={authData.email}
-                        placeholder="Tu email..."
-                        placeholderTextColor={'#fff'}
-                        keyboardType="email-address"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(t) => handleTextInput(t, 'password')}
-                        value={authData.password}
-                        placeholder="Tu password..."
-                        placeholderTextColor={'#fff'}
-                        secureTextEntry
-                    />
-                    <Pressable style={styles.button} onPress={(e) => authStatus == "register" ? handleResgisterPress(e) : handleLoginPress(e)}>
-                        <Text style={styles.buttonText}>{ authStatus == "register" ? 'Register me!' : 'Log me in!' }</Text>
-                    </Pressable>
-                </>
+                <Pressable style={styles.button} onPress={(e) => authStatus == "register" ? handleResgisterPress(e) : handleLoginPress(e)}>
+                    <Text style={styles.buttonText}>{ authStatus == "register" ? 'Register me!' : 'Log me in!' }</Text>
+                </Pressable>
             )}
             {authStatus == "logged" && (
                 <View>
