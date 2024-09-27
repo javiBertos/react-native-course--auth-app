@@ -43,6 +43,10 @@ export default function Auth({ setAuthTitle }: AuthProps) {
         });
     };
 
+    const getUserByEmail = (searchEmail: string): User|null => {
+        return users.find(({email}) => email == searchEmail) ?? null;
+    }
+
     const handleResgisterPress = (e: GestureResponderEvent) => {
         users.push(authData);
 
@@ -56,32 +60,35 @@ export default function Auth({ setAuthTitle }: AuthProps) {
     };
 
     const handleLoginPress = (e: GestureResponderEvent) => {
-        const user = users.find((u) => u.email == authData.email && u.password == authData.password);
+        const user = getUserByEmail(authData.email);
 
-        if (user) {
+        if (user && user.password == authData.password) {
             setAuthData(user);
             setAuthStatus("logged");
         } else {
-            console.log('Wrong login...');
+            Alert.alert('Wrong login...', "The credentials you are using doesn't match any valid user");
         }
     };
 
     const handleLogoutPress = (e: GestureResponderEvent) => {
-        Alert.alert('Shall I close your session, dude? (like if you had any... XD)', 'Logging out...', [
+        Alert.alert('Logging out...', 'Shall I close your session, dude? (like if you had any... XD)', [
             {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
             },
-            {text: 'Sure!', onPress: () => {
-                setAuthData({
-                    name: '',
-                    email: '',
-                    password: '',
-                });
-                setAuthStatus("register");
-            }},
-          ]);
+            {
+                text: 'Sure!',
+                onPress: () => {
+                    setAuthData({
+                        name: '',
+                        email: '',
+                        password: '',
+                    });
+                    setAuthStatus("register");
+                }
+            },
+        ]);
     };
 
     return (
