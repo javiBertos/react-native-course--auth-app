@@ -29,6 +29,19 @@ export const AuthStyles = StyleSheet.create({
         color: '#fff',
         textAlign: 'center',
     },
+    navLink: {
+        width: '100%',
+    },
+    navLinkText: {
+        fontSize: 17,
+        color: '#fff',
+    },
+    leftAligned: {
+        textAlign: 'left',
+    },
+    rightAligned: {
+        textAlign: 'right',
+    },
     logOutButton: {
         backgroundColor: '#912a2a',
         borderRadius: 50,

@@ -13,12 +13,14 @@ export default function Auth({ setAuthTitle }: AuthProps) {
 
     const [authStatus, setAuthStatus] = useState<"register"|"login"|"logged">("register");
 
+    const nameRef = useRef<TextInput | null>(null);
     const emailRef = useRef<TextInput | null>(null);
     const formDefinitions: InputForm[] = [
         {
             propertyName: "name",
             placeholder: "Your name...",
-            secureTextEntry: false
+            secureTextEntry: false,
+            ref: nameRef
         },
         {
             propertyName: "email",
@@ -105,6 +107,22 @@ export default function Auth({ setAuthTitle }: AuthProps) {
 
     return (
         <View style={styles.authContainer}>
+            {authStatus == "register" && (
+                <Pressable style={styles.navLink} onPress={() => {
+                    setAuthStatus("login");
+                    emailRef.current?.focus();
+                }}>
+                    <Text style={[styles.navLinkText, styles.rightAligned]}>Go to login &gt;</Text>
+                </Pressable>
+            )}
+            {authStatus == "login" && (
+                <Pressable style={styles.navLink} onPress={() => {
+                    setAuthStatus("register");
+                    nameRef.current?.focus();
+                }}>
+                    <Text style={[styles.navLinkText, styles.leftAligned]}>&lt; Back to register</Text>
+                </Pressable>
+            )}
             {
                 formDefinitions.map(formElement => {
                     if (authStatus == "register" && formElement.propertyName == "name" || authStatus != "logged" && formElement.propertyName != "name") {
