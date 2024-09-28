@@ -9,7 +9,6 @@ export const AppBarStyles = StyleSheet.create({
         width: '100%',
     },
     title: {
-        marginTop: 50,
         fontSize: 24,
         color: '#fff',
         margin: 10
