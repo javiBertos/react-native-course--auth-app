@@ -3,16 +3,19 @@ import AppBar from './components/AppBar/AppBar';
 import Register from './components/Auth/Auth';
 import { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import GlobalContext from './context/global';
 
 export default function App() {
-    const [authTitle, setAuthTitle] = useState<string>("Register");
+    const [authTitle, setAuthTitle] = useState<string>('Register');
     
     return (
-        <SafeAreaProvider style={styles.container}>
-            <AppBar title="Mangurian home!" />
-            <Text style={styles.authTitle }>{ authTitle }</Text>
-            <Register setAuthTitle={setAuthTitle} />
-        </SafeAreaProvider>
+        <GlobalContext.Provider value={{authTitle, setAuthTitle}}>
+            <SafeAreaProvider style={styles.container}>
+                <AppBar />
+                <Text style={styles.authTitle }>{ authTitle }</Text>
+                <Register />
+            </SafeAreaProvider>
+        </GlobalContext.Provider>
     );
 }
 

@@ -1,10 +1,13 @@
 import { Alert, GestureResponderEvent, Linking, Pressable, Text, TextInput, View } from "react-native";
-import { AuthProps, InputForm } from "./types";
+import { InputForm } from "./types";
 import { AuthStyles as styles } from "./styles";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { User, users } from "../../store/users";
+import GlobalContext from "../../context/global";
 
-export default function Auth({ setAuthTitle }: AuthProps) {
+export default function Auth() {
+    const {setAuthTitle} = useContext(GlobalContext);
+
     const [authData, setAuthData] = useState<User>({
         name: '',
         email: '',
